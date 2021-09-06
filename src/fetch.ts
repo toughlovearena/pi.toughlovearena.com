@@ -1,7 +1,9 @@
+import cliProgress from 'cli-progress';
 import decompress from 'decompress';
 import deleter from 'del';
 import fs from 'fs';
 import nodeFetch from 'node-fetch';
+import request from 'request';
 const fsPromises = fs.promises;
 
 interface Version {
@@ -17,22 +19,61 @@ const path = {
 };
 
 const downloadDist = async (version: string) => {
-  console.log('downloading:', version);
+  console.log('deleting old zip');
   await deleter(path.tempDist);
-  const latestResp = await nodeFetch(path.remoteDist(version));
-  const stream = fs.createWriteStream(path.tempDist);
-  await new Promise((resolve, reject) => {
-    stream.on('error', reject);
-    stream.on('finish', resolve);
-    latestResp.body!.pipe(stream);
+
+  console.log('downloading new zip:', version);
+  const url = path.remoteDist(version);
+  const filename = path.tempDist;
+  await new Promise<void>((resolve, reject) => {
+    const progressBar = new cliProgress.SingleBar({
+      format: '{bar} {percentage}% | ETA: {eta}s'
+    }, cliProgress.Presets.shades_classic);
+
+    const file = fs.createWriteStream(filename);
+    let receivedBytes = 0
+
+    request.get(url)
+      .on('response', (response) => {
+        if (response.statusCode !== 200) {
+          return reject('Response status was ' + response.statusCode);
+        }
+
+        const totalBytes = parseFloat(response.headers['content-length']!);
+        progressBar.start(totalBytes, 0);
+      })
+      .on('data', (chunk) => {
+        receivedBytes += chunk.length;
+        progressBar.update(receivedBytes);
+      })
+      .pipe(file)
+      .on('error', (err) => {
+        fsPromises.unlink(filename);
+        progressBar.stop();
+        return reject(err.message);
+      });
+
+    file.on('finish', () => {
+      progressBar.stop();
+      file.close();
+      resolve();
+    });
+
+    file.on('error', (err) => {
+      fsPromises.unlink(filename);
+      progressBar.stop();
+      return reject(err.message);
+    });
   });
   console.log('finished download');
 };
 
 const unzipDist = async () => {
-  console.log('unzipping...');
+  console.log('deleting old folder');
   await deleter(path.latestDist);
+  console.log('unzipping new folder, this may take a minute...');
   await decompress(path.tempDist, path.latestDist);
+  console.log('deleting new zip');
   await deleter(path.tempDist);
 }
 
