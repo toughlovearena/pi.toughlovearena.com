@@ -30,21 +30,13 @@ cd pi.toughlovearena.com
 ./bash/install.sh
 ```
 
-### Step 3: Edit the Linux autostart config to setup the boot script
+Running `bash/install.sh` does the following things:
 
-Edit this file `/etc/xdg/lxsession/LXDE-pi/autostart` to match the code below:
+- Installs `nvm` and sets up the node environments for running the fetch scripts and server
+- Installs `unclutter` which hides the mouse after a short period of inactivity
+- Adds `bash/boot.sh` to the autostart config for Linux
 
-```bash
-# existing code, probably looks like this. leave it alone
-@lxpanel --profile LXDE-pi
-@pcmanfm --desktop --profile LXDE-pi
-@xscreensaver -no-splash
-
-# add this to the bottom. this is what boots TLA
-@lxterminal -e ~/pi.toughlovearena.com/bash/boot.sh
-```
-
-### Step 4: Test it out!
+### Step 3: Test it out!
 
 - Simply turn off your Raspberry PI and turn it back on
 - You should see a terminal popup right after the desktop appears
