@@ -5,7 +5,8 @@
   "license": "MIT",
   "description": "Scripts for running TLA off a Raspberry PI",
   "scripts": {
-    "fetch": "ts-node src/fetch.ts",
+    "build": "tsc",
+    "fetch": "node dist/fetch.js",
     "start": "http-server latest/dist --silent"
   },
   "dependencies": {
@@ -17,7 +18,6 @@
     "del": "^6.0.0",
     "http-server": "^13.0.1",
     "node-fetch": "2.6.1",
-    "ts-node": "^10.2.1",
     "typescript": "^4.4.2"
   },
   "repository": {
