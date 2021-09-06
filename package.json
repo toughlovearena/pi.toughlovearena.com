@@ -1,0 +1,31 @@
+{
+  "name": "pi.toughlovearena.com",
+  "version": "1.0.0",
+  "author": "mpaulweeks",
+  "license": "MIT",
+  "description": "Scripts for running TLA off a Raspberry PI",
+  "scripts": {
+    "fetch": "ts-node src/fetch.ts",
+    "start": "http-server latest/dist --silent"
+  },
+  "dependencies": {
+    "@types/decompress": "^4.2.4",
+    "@types/del": "^4.0.0",
+    "@types/node": "^16.7.10",
+    "@types/node-fetch": "^2.5.12",
+    "decompress": "^4.2.1",
+    "del": "^6.0.0",
+    "http-server": "^13.0.1",
+    "node-fetch": "2.6.1",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toughlovearena/pi.toughlovearena.com.git"
+  },
+  "bugs": {
+    "url": "https://github.com/toughlovearena/pi.toughlovearena.com/issues"
+  },
+  "homepage": "https://github.com/toughlovearena/pi.toughlovearena.com#readme"
+}
