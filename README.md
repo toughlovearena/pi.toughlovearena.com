@@ -37,6 +37,5 @@ Edit this file `/etc/xdg/lxsession/LXDE-pi/autostart` to match the code below:
 @xscreensaver -no-splash
 
 # add this to the bottom. this is what boots TLA
-unclutter -idle 3
 @lxterminal -e ~/pi.toughlovearena.com/bash/boot.sh
 ```
