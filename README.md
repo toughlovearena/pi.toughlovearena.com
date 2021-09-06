@@ -1,6 +1,6 @@
 # pi.toughlovearena.com
 
-How to turn a Raspberry Pi into a dedicated Tough Love Arena console!
+A guide on how to turn a Raspberry Pi into a dedicated Tough Love Arena console! Check out the source code on [GitHub](https://github.com/toughlovearena/pi.toughlovearena.com)
 
 ## Method 1: Load an existing image
 
