@@ -20,3 +20,14 @@ sudo apt install unclutter
 #############
 
 sudo su -c 'echo "@lxterminal -e ~/pi.toughlovearena.com/bash/boot.sh" >> /etc/xdg/lxsession/LXDE-pi/autostart'
+
+###########
+# scripts #
+###########
+
+# manually install and build
+npm i
+npm run build
+
+# run fetch once
+./bash/fetch.sh
