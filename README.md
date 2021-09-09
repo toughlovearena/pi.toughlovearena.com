@@ -54,7 +54,7 @@ Running `bash/install.sh` does the following things:
 - If there's a new version of TLA, it might take a minute or two to update, depending on your internet speed
 - It should then launch the game in a fullscreen browser. Use a keyboard or plug in a controller and start playing!
 - If you want to get back to the Desktop, press Alt+F4 to close the browser
-  - The terminal will continue to run a local webserver at `localhost:8000`
+  - The terminal will continue to run a local webserver at `localhost:8080`
   - If you want to stop and close the terminal, press Ctrl+C
 - If you want to check for updates, the simplest way is to just turn the machine off and on again
 
