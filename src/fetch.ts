@@ -1,9 +1,11 @@
+import sevenBin from '7zip-bin';
 import cliProgress from 'cli-progress';
-import decompress from 'decompress';
 import deleter from 'del';
 import fs from 'fs';
+import { extractFull as sevenExtract } from 'node-7z';
 import nodeFetch from 'node-fetch';
 import request from 'request';
+const pathTo7zip = sevenBin.path7za;
 const fsPromises = fs.promises;
 
 interface Version {
@@ -13,9 +15,9 @@ interface Version {
 const path = {
   latestDist: 'latest/dist',
   latestVersion: 'latest/version.json',
-  tempDist: 'tmp/dist.zip',
+  tempDist: 'tmp/dist.7z',
   remoteVersion: 'http://storage.googleapis.com/fighter-html/version.json',
-  remoteDist: (version: string) => `http://storage.googleapis.com/fighter-html/${version}.zip`,
+  remoteDist: (version: string) => `http://storage.googleapis.com/fighter-html/${version}.7z`,
 };
 
 const downloadDist = async (version: string) => {
@@ -72,7 +74,13 @@ const unzipDist = async () => {
   console.log('deleting old folder');
   await deleter(path.latestDist);
   console.log('unzipping new folder, this may take a minute...');
-  await decompress(path.tempDist, path.latestDist);
+  await new Promise<void>((resolve, reject) => {
+    const process = sevenExtract(path.tempDist, path.latestDist, {
+      $bin: pathTo7zip,
+    });
+    process.on('end', () => resolve());
+    process.on('error', reject);
+  });
   console.log('deleting new zip');
   await deleter(path.tempDist);
 }
