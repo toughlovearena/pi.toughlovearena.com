@@ -24,9 +24,9 @@ const downloadDist = async (version: string) => {
   console.log('deleting old zip');
   await deleter(path.tempDist);
 
-  console.log('downloading new zip:', version);
   const url = path.remoteDist(version);
   const filename = path.tempDist;
+  console.log('downloading new zip:', url.split('/').slice(-1)[0]);
   await new Promise<void>((resolve, reject) => {
     const progressBar = new cliProgress.SingleBar({
       format: '{bar} {percentage}% | ETA: {eta}s'
@@ -75,11 +75,33 @@ const unzipDist = async () => {
   await deleter(path.latestDist);
   console.log('unzipping new folder, this may take a minute...');
   await new Promise<void>((resolve, reject) => {
+    const progressBar = new cliProgress.SingleBar({
+      format: '{bar} {percentage}% | ETA: {eta}s'
+    }, cliProgress.Presets.shades_classic);
+    let percent: number | undefined;
+
     const process = sevenExtract(path.tempDist, path.latestDist, {
       $bin: pathTo7zip,
+      $progress: true,
     });
-    process.on('end', () => resolve());
-    process.on('error', reject);
+    process.on('progress', evt => {
+      const newPercent = evt.percent;
+      if (percent === undefined) {
+        percent = newPercent;
+        progressBar.start(100, percent);
+      } else if (percent !== newPercent) {
+        percent = newPercent;
+        progressBar.update(percent);
+      }
+    });
+    process.on('end', () => {
+      progressBar.stop();
+      resolve();
+    });
+    process.on('error', () => {
+      progressBar.stop();
+      reject();
+    });
   });
   console.log('deleting new zip');
   await deleter(path.tempDist);
