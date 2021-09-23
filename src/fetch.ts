@@ -1,9 +1,11 @@
+import sevenBin from '7zip-bin';
 import cliProgress from 'cli-progress';
-import decompress from 'decompress';
 import deleter from 'del';
 import fs from 'fs';
+import { extractFull as sevenExtract } from 'node-7z';
 import nodeFetch from 'node-fetch';
 import request from 'request';
+const pathTo7zip = sevenBin.path7za;
 const fsPromises = fs.promises;
 
 interface Version {
@@ -13,18 +15,18 @@ interface Version {
 const path = {
   latestDist: 'latest/dist',
   latestVersion: 'latest/version.json',
-  tempDist: 'tmp/dist.zip',
+  tempDist: 'tmp/dist.7z',
   remoteVersion: 'http://storage.googleapis.com/fighter-html/version.json',
-  remoteDist: (version: string) => `http://storage.googleapis.com/fighter-html/${version}.zip`,
+  remoteDist: (version: string) => `http://storage.googleapis.com/fighter-html/${version}.7z`,
 };
 
 const downloadDist = async (version: string) => {
   console.log('deleting old zip');
   await deleter(path.tempDist);
 
-  console.log('downloading new zip:', version);
   const url = path.remoteDist(version);
   const filename = path.tempDist;
+  console.log('downloading new zip:', url.split('/').slice(-1)[0]);
   await new Promise<void>((resolve, reject) => {
     const progressBar = new cliProgress.SingleBar({
       format: '{bar} {percentage}% | ETA: {eta}s'
@@ -72,7 +74,35 @@ const unzipDist = async () => {
   console.log('deleting old folder');
   await deleter(path.latestDist);
   console.log('unzipping new folder, this may take a minute...');
-  await decompress(path.tempDist, path.latestDist);
+  await new Promise<void>((resolve, reject) => {
+    const progressBar = new cliProgress.SingleBar({
+      format: '{bar} {percentage}% | ETA: {eta}s'
+    }, cliProgress.Presets.shades_classic);
+    let percent: number | undefined;
+
+    const process = sevenExtract(path.tempDist, path.latestDist, {
+      $bin: pathTo7zip,
+      $progress: true,
+    });
+    process.on('progress', evt => {
+      const newPercent = evt.percent;
+      if (percent === undefined) {
+        percent = newPercent;
+        progressBar.start(100, percent);
+      } else if (percent !== newPercent) {
+        percent = newPercent;
+        progressBar.update(percent);
+      }
+    });
+    process.on('end', () => {
+      progressBar.stop();
+      resolve();
+    });
+    process.on('error', () => {
+      progressBar.stop();
+      reject();
+    });
+  });
   console.log('deleting new zip');
   await deleter(path.tempDist);
 }
