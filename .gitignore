@@ -1,3 +1,14 @@
+##$ pi.toughlovearena.com
+
+# fetch.ts
+latest/
+tmp/
+
+# ignore package-lock due to cross-OS issues
+package-lock.json
+
+### Node
+
 # Logs
 logs
 *.log
@@ -102,10 +113,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-# fetch.ts
-latest/
-tmp/
-
-# ignore package-lock due to cross-OS issues
-package-lock.json
