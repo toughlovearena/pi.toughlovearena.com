@@ -4,7 +4,17 @@ A guide on how to turn a Raspberry Pi into a dedicated Tough Love Arena console!
 
 ## Method 1: Load an existing image
 
-Coming soon...
+### Prerequisites
+
+- Download the latest zip from the [Releases](https://github.com/toughlovearena/pi.toughlovearena.com/releases) page of this repo
+- Download the official [Raspberry PI Imager](https://www.raspberrypi.org/software/)
+- Plug in a microSD card that's atleast 8 GB or larger
+
+### Install
+
+- Follow the prompts in the Imager to write the latest zip/image file to the microSD card
+- Plug the microSD into the PI and turn it on! It should automatically boot the game after a short period
+- In order to update, you will need an internet connection. Either plug in an ethernet cable, or exit the game after booting (Alt-F4) and enter your personal Wifi info using the network tab in the top right. Once the network is setup, reboot the PI to trigger the auto-updater
 
 ## Method 2: Setup from a fresh linux install
 
