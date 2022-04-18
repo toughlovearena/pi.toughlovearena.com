@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "fetch": "node dist/fetch.js",
-    "start": "http-server latest/dist --silent"
+    "start": "http-server latest/dist --silent --port 8080"
   },
   "dependencies": {
     "@types/cli-progress": "^3.9.2",
