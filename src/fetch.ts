@@ -16,8 +16,8 @@ const path = {
   latestDist: 'latest/dist',
   latestVersion: 'latest/version.json',
   tempDist: 'tmp/dist.7z',
-  remoteVersion: 'http://storage.googleapis.com/fighter-html/version.json',
-  remoteDist: (version: string) => `http://storage.googleapis.com/fighter-html/${version}.7z`,
+  remoteVersion: `https://data.toughlovearena.cloud/zip/version.json?pi=${new Date().getTime()}`,
+  remoteDist: (version: string) => `https://data.toughlovearena.cloud/zip/${version}.7z`,
 };
 
 const downloadDist = async (version: string) => {
