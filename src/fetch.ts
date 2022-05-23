@@ -98,9 +98,9 @@ const unzipDist = async () => {
       progressBar.stop();
       resolve();
     });
-    process.on('error', () => {
+    process.on('error', err => {
       progressBar.stop();
-      reject();
+      reject(err);
     });
   });
   console.log('deleting new zip');
@@ -133,11 +133,12 @@ const fetchVersion = async () => {
     console.log('updating version.json');
     await fsPromises.writeFile(path.latestVersion, newVersionRaw);
   } catch (error) {
+    console.log(error);
     if (oldVersion === undefined) {
-      console.log('no old version detected, throwing error:', error);
+      console.log('no old version detected, throwing');
       throw error;
     } else {
-      console.log('there was an error fetching new version:', error);
+      console.log('there was an error fetching new version, proceeding with old');
     }
   }
   console.log('done!');
