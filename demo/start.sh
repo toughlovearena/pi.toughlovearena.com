@@ -1,3 +1,5 @@
+# demo start
+
 . ~/.nvm/nvm.sh
 nvm use
 echo "http://localhost:8080"
