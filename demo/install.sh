@@ -14,7 +14,12 @@ nvm install $(cat .nvmrc)
 # scripts #
 ###########
 
-# manually install and build
+# manually install
 npm i
+
+# fix possible permissions bug with 7zip
+chmod +x node_modules/7zip-bin/linux/x64/7za
+
+# build and fetch
 npm run build
 npm run fetch
